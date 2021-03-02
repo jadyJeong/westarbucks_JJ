@@ -8,8 +8,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.http import JsonResponse
 
-from products.models import *
-
+from products.models import Drink, Category
 
 # wecode convention : "functionname+View"
 
@@ -35,7 +34,7 @@ class ProductView(View):
         drink = Drink.objects.create(
 
                 category     = data['category'],
-                korean_name  = data[''],
+                korean_name  = data['korean_name'],
                 english_name = data['english_name'],
                 description  = data['description'],
 
@@ -54,13 +53,14 @@ class ProductView(View):
         for product in products:
             preprocess = (
                 {
-                'category'     : Drink.category,
-                'korean_name'  : Drink.korean_name,
-                'english_name' : Drink.english_name,
-                'description'  : Drink.description
+                'category'     : product.category.name,
+                'korean_name'  : product.korean_name,
+                'english_name' : product.english_name,
+                'description'  : product.description
                 }
             ) 
             results.append(preprocess)
+            print(preprocess)
 
         return JsonResponse({'results are ':results},status=200)
     
@@ -92,10 +92,11 @@ class CategoryView(View):
         for category in categories :
             preprocess = (
                 {
-                'name'    : Category.name,
-                'menu'    : Category.menu
+                'name'    : category.name,
+                'menu'    : category.menu.name
                 }
             ) 
+            print(preprocess)
             results.append(preprocess)
 
         return JsonResponse({'results are ':results},status=200)
